@@ -30,7 +30,7 @@ const RaceList = ({ type }) => {
 
   const handleRaceClick = (raceId) => {
     if (type == "upcoming") {
-      navigate(`/race/${raceId}`);
+      navigate(`/races/${raceId}`);
     }
   };
 
@@ -38,8 +38,8 @@ const RaceList = ({ type }) => {
     <div>
       {races.map((race) => (
         <div
-          key={race.id}
-          onClick={() => handleRaceClick(race.id)}
+          key={race._id}
+          onClick={() => handleRaceClick(race._id)}
           className="race-item flex items-center justify-between p-4 border-b"
         >
           <div className="flex items-center">
