@@ -7,7 +7,7 @@ const toDoRoutes = require("./routes/ToDoRoutes"); // Import ToDo routes
 const raceRouter = require("./routes/RaceRoutes");
 const { handleErrors } = require("./middlewares/ErrorHandler"); // // Import error handling middleware
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 9000;
 const app = express();
 
 app.use(cors());

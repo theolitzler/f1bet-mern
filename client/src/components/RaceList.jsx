@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Flag from "react-world-flags";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +20,7 @@ const RaceList = ({ type }) => {
   useEffect(() => {
     const fetchRaces = async () => {
       const response = await axios.get(
-        `http://localhost:5000/races/${type}`
+        `http://localhost:9000/races/${type}`
       );
       setRaces(response.data.message);
     };

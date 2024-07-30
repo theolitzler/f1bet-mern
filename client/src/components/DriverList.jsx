@@ -1,9 +1,9 @@
+import { useState } from "react";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import DriverTile from './DriverTile';
-import {useState} from "react";
 
-const drivers = [
+const drivers= [
   { name: 'Max Verstappen', number: 1, team: 'Red Bull' },
   { name: 'Sergio Perez', number: 11, team: 'Red Bull' },
   { name: 'Lando Norris', number: 4, team: 'McLaren' },
