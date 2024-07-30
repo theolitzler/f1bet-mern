@@ -1,13 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom'; 
+import ReactDOM from 'react-dom/client'; 
 import App from './App'; 
 import './index.css';
 import { Toaster } from 'react-hot-toast';
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
   <React.StrictMode> 
     <App />
     <Toaster /> {/* Toaster for notifications */}
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );

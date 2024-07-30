@@ -1,11 +1,14 @@
-import Home from "./pages/Home";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Races from "./pages/Races";
 
 function App() {
   return (
-    <>
-      {/* Render the Home page */}
-      <Home />
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Races />} />
+      </Routes>
+    </Router>
   );
 }
 
