@@ -12,6 +12,14 @@ const BetSchema = mongoose.Schema({
     prediction: {
         type: Object,
         required: true
+    },
+    isFinal: {
+        type: Boolean,
+        default: false
+    },
+    score: {
+        type: Number,
+        default: 0
     }
 }, { timestamps: true });
 
