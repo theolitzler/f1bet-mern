@@ -2,10 +2,10 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
+const { handleErrors } = require("./middlewares/ErrorHandler");
 const authRoutes = require("./routes/authRoutes");
-const toDoRoutes = require("./routes/ToDoRoutes"); // Import ToDo routes
 const raceRouter = require("./routes/RaceRoutes");
-const { handleErrors } = require("./middlewares/ErrorHandler"); // // Import error handling middleware
+const driverRouter = require("./routes/DriverRoutes");
 
 const port = process.env.PORT || 9000;
 const app = express();
@@ -17,8 +17,8 @@ app.use(handleErrors);
 connectDB();
 
 app.use("/auth", authRoutes);
-app.use("/todo", toDoRoutes);
 app.use("/races", raceRouter);
+app.use("/drivers", driverRouter);
 
 app.listen(port, () => {
   console.log("Connected to port " + port);
