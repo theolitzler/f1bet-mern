@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
+  env: { node: true, es2020: true },
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
@@ -17,5 +17,9 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+  },
+  globals: {
+    localStorage: true,
+    fetch: true
   },
 }

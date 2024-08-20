@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { UserOutlined } from "@ant-design/icons";
+import { FlagOutlined, OrderedListOutlined, UserOutlined } from "@ant-design/icons";
 
 function Navbar() {
   return (
@@ -7,10 +7,10 @@ function Navbar() {
       <div className="flex justify-between">
         <div className="space-x-4">
            <Link to="/" className="hover:text-gray-300">
-            Courses
+               <FlagOutlined /> Courses
            </Link>
            <Link to="/rankings" className="hover:text-gray-300">
-            Classements
+               <OrderedListOutlined /> Classements
            </Link>
         </div>
          <Link to="/profile" className="hover:text-gray-300">

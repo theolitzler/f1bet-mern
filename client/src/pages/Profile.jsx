@@ -16,6 +16,7 @@ const Profile = () => {
                 const decoded = jwtDecode(token);
                 setIsAuthenticated(true);
                 setUser(decoded);
+                console.log(decoded);
             } catch (error) {
                 console.error("Invalid token", error);
                 setIsAuthenticated(false);
@@ -34,7 +35,7 @@ const Profile = () => {
             <Navbar />
             {isAuthenticated ? (
                 <div>
-                    <h1 className="text-2xl font-bold">Profile</h1>
+                    <h1 className="text-2xl font-bold">Profil: {user.username}</h1>
                     <p>Email: {user.email}</p>
                     <button onClick={handleLogout} className="mt-4 bg-red-500 text-white px-4 py-2 rounded">
                         Logout
