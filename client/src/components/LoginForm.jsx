@@ -12,6 +12,8 @@ const LoginForm = () => {
             console.log(response.data);
             localStorage.setItem("token", response.data.token);
             // Handle successful login
+            // eslint-disable-next-line no-undef
+            window.location.href = 'http://localhost:5173/';
         } catch (error) {
             console.error("Login failed", error);
             // Handle login error

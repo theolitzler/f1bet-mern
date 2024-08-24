@@ -14,7 +14,9 @@ const UserSchema = mongoose.Schema({
         required: true
     },
     totalPoints: {
-        type: Number
+        type: Number,
+        required: true,
+        default: 0
     }
 }, { timestamps: true });
 

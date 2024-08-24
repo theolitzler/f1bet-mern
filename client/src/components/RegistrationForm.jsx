@@ -12,6 +12,8 @@ const RegistrationForm = () => {
             const response = await axios.post("http://localhost:9000/auth/register", { username, email, password });
             console.log(response.data);
             // Handle successful registration
+            // eslint-disable-next-line no-undef
+            window.location.href = 'http://localhost:5173/';
         } catch (error) {
             console.error("Registration failed", error);
             // Handle registration error

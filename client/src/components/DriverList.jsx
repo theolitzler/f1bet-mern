@@ -1,11 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import DriverTile from './DriverTile';
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 
 const DriverList = () => {
-  const [driverList, setDriverList] = useState(drivers);
+  const [driverList, setDriverList] = useState([]);
+
+  useEffect(() => {
+    const fetchDrivers = async () => {
+      try {
+        const response = await fetch('http://localhost:9000/drivers/all');
+        const data = await response.json();
+
+        if (data.success) {
+          setDriverList(data.message);
+        } else {
+          console.error('Failed to fetch drivers:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching drivers:', error);
+      }
+    };
+
+    fetchDrivers();
+  }, []);
 
   const moveTile = (dragIndex, hoverIndex) => {
     const dragDriver = driverList[dragIndex];
@@ -21,9 +40,9 @@ const DriverList = () => {
       ...driver,
     }));
 
-    const token = localStorage.getItem('token');
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || "");
-    const userId = decoded.id;
+    // const token = localStorage.getItem('token');
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET || "");
+    // const userId = decoded.id;
 
     console.log(JSON.stringify(driverOrder, null, 2));
   };
@@ -32,7 +51,7 @@ const DriverList = () => {
     <DndProvider backend={HTML5Backend}>
       <div className="p-4">
         {driverList.map((driver, index) => (
-          <DriverTile key={driver.number} index={index} driver={driver} moveTile={moveTile} />
+          <DriverTile key={driver._id} index={index} driver={driver} moveTile={moveTile} />
         ))}
         <button
           onClick={saveList}
