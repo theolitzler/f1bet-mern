@@ -1,4 +1,5 @@
 const Bet = require('../models/Bet');
+const mongoose = require("mongoose");
 
 // Controller to post a bet
 exports.createBet = async (req, res, next) => {
@@ -66,11 +67,39 @@ exports.createBet = async (req, res, next) => {
 // }
 
 // Controller to get all bets by Race
-// exports.getBetByRace = async (req, res, next) => {
-//
-// }
+exports.getBetsByRace = async (req, res, next) => {
+    try {
+        const bets = await Bet.find();
+        res.status(200).json({ success: true, message: bets });
+    } catch (error) {
+        // Pass any errors to the error-handling middleware
+        next(error);
+    }
+}
 
-// Controller to get all bets by User
-// exports.getBetByID = async (req, res, next) => {
-//
-// }
+// Controller to get a bet by its ID
+exports.getBetByID = async (req, res, next) => {
+    try {
+        const { betId } = req.params;
+
+        // Verify if the ID is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(betId)) {
+            return res
+                .status(400)
+                .json({success: false, message: "Invalid ID format"});
+        }
+
+        const bet = await Bet.findOne({_id: betId});
+
+        if (!bet) {
+            return res
+                .status(404)
+                .json({success: false, message: "Race not found!"});
+        }
+
+        res.status(200).json({success: true, message: bet});
+    } catch (error) {
+        // Pass any errors to the error-handling middleware
+        next(error);
+    }
+}

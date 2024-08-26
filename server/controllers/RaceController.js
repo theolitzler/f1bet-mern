@@ -47,7 +47,7 @@ exports.getRaceById = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    // Vérifiez si l'ID est un ObjectId valide
+    // Verify if the ID is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res
         .status(400)

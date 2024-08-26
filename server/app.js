@@ -6,6 +6,7 @@ const { handleErrors } = require("./middlewares/ErrorHandler");
 const authRoutes = require("./routes/authRoutes");
 const raceRouter = require("./routes/RaceRoutes");
 const driverRouter = require("./routes/DriverRoutes");
+const betRouter = require("./routes/BetRoutes");
 
 const port = process.env.PORT || 9000;
 const app = express();
@@ -19,6 +20,7 @@ connectDB();
 app.use("/auth", authRoutes);
 app.use("/races", raceRouter);
 app.use("/drivers", driverRouter);
+app.use("/bet", betRouter);
 
 app.listen(port, () => {
   console.log("Connected to port " + port);
