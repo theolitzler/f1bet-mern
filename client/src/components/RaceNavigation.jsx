@@ -6,7 +6,7 @@ const RaceNavigation = () => {
 
   return (
     <div>
-      <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg">
+      <div className="max-w-4xl mx-auto bg-white shadow-md">
         <div className="flex justify-between p-4 border-b">
           <button
             onClick={() => setActiveTab("upcoming")}

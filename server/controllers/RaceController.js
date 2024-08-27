@@ -45,16 +45,16 @@ exports.getCompletedRaces = async (req, res, next) => {
 // Controller to get a Race item by ID
 exports.getRaceById = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { raceId } = req.params;
 
     // Verify if the ID is a valid ObjectId
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    if (!mongoose.Types.ObjectId.isValid(raceId)) {
       return res
         .status(400)
         .json({ success: false, message: "Invalid ID format" });
     }
 
-    const races = await Race.findOne({ _id: id });
+    const races = await Race.findOne({ _id: raceId });
 
     if (!races) {
       return res

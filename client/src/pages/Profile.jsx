@@ -16,7 +16,6 @@ const Profile = () => {
                 const decoded = jwtDecode(token);
                 setIsAuthenticated(true);
                 setUser(decoded);
-                console.log(decoded);
             } catch (error) {
                 console.error("Invalid token", error);
                 setIsAuthenticated(false);
