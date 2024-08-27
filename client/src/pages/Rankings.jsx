@@ -48,9 +48,6 @@ const Rankings = () => {
                 </div>
 
                 <div className="bg-white pb-4 shadow">
-                    <div className="text-center mb-4">
-                        <CrownOutlined className="text-4xl text-yellow-500"/>
-                    </div>
                     <ul className="p-4">
                         {rankings.map((user, index) => (
                             <li key={user._id}
