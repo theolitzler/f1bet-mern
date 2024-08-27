@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import DriverTile from './DriverTile';
-// import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 const DriverList = () => {
   const [driverList, setDriverList] = useState([]);
@@ -34,17 +34,44 @@ const DriverList = () => {
     setDriverList(updatedDrivers);
   };
 
-  const saveList = () => {
+  const saveList = async () => {
     const driverOrder = driverList.map((driver, index) => ({
       position: index + 1,
       ...driver,
     }));
 
-    // const token = localStorage.getItem('token');
-    // const decoded = jwt.verify(token, process.env.JWT_SECRET || "");
-    // const userId = decoded.id;
+    const token = localStorage.getItem('token');
+    const decoded = jwt.decode(token);
+    const userId = decoded?.userId;
 
-    console.log(JSON.stringify(driverOrder, null, 2));
+    const raceId = location.pathname.split("/").pop();
+
+    const payload = {
+      userId: userId,
+      raceId: raceId,
+      prediction: driverOrder
+    };
+
+    try {
+      const response = await fetch('http://localhost:9000/bet', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        console.log('Prediction saved successfully:', result.message);
+      } else {
+        console.error('Failed to save prediction:', result.message);
+      }
+    } catch (error) {
+      console.error('Error saving prediction:', error);
+    }
+
+    console.log(JSON.stringify(payload));
   };
 
   return (
