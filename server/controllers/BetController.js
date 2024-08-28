@@ -66,11 +66,30 @@ exports.createBet = async (req, res, next) => {
 //
 // }
 
-// Controller to get all bets by Race
-exports.getBetsByRace = async (req, res, next) => {
+// Controller to get all bets or a bet by race and user ID
+exports.getBet = async (req, res, next) => {
     try {
-        const bets = await Bet.find();
-        res.status(200).json({ success: true, message: bets });
+        if (req.query) {
+            const { raceId, userId } = req.query;
+
+            // Validate raceId and userId if necessary
+            if (!mongoose.Types.ObjectId.isValid(raceId) || !mongoose.Types.ObjectId.isValid(userId)) {
+                return res.status(400).json({ success: false, message: "Invalid ID format" });
+            }
+
+            // Find the bet based on raceId and userId
+            const bet = await Bet.findOne({ raceId: raceId, userId: userId });
+
+            if (!bet) {
+                return res.status(404).json({ success: false, message: "Bet not found!" });
+            }
+
+            // Return the found bet
+            res.status(200).json({ success: true, message: bet });
+        } else {
+            const bets = await Bet.find();
+            res.status(200).json({ success: true, message: bets });
+        }
     } catch (error) {
         // Pass any errors to the error-handling middleware
         next(error);
