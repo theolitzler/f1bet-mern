@@ -19,7 +19,7 @@ const addDriver = (name, team, nationality) => {
     });
 };
 
-const getAllDrivers = () => {
+const getAllTheDrivers = () => {
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM drivers`;
         db.all(query, [], (err, rows) => {
@@ -29,4 +29,4 @@ const getAllDrivers = () => {
     });
 };
 
-module.exports = { addDriver, getAllDrivers };
+module.exports = { addDriver, getAllTheDrivers };

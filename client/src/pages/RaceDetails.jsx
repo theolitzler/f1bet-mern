@@ -1,6 +1,7 @@
 import DriverList from '../components/DriverList.jsx';
 import Navbar from "../components/Navbar.jsx";
 import {useEffect, useState} from "react";
+import {API_BASE_URL} from "../services/ApiConfig.jsx";
 
 const RaceDetails = () => {
   const [raceInfo, setRaceInfo] = useState()
@@ -9,7 +10,7 @@ const RaceDetails = () => {
     const fetchRace = async () => {
       try {
         const raceId = location.pathname.split("/").pop();
-        const response = await fetch(`http://localhost:9000/races/${raceId}`);
+        const response = await fetch(`${API_BASE_URL}/races/${raceId}`);
         const data = await response.json();
 
         if (data.success) {

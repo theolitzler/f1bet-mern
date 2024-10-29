@@ -4,7 +4,7 @@ db.run(`
     CREATE TABLE IF NOT EXISTS races (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name VARCHAR(100) NOT NULL,
-        date DATE NOT NULL,
+        date DATETIME NOT NULL,
         location VARCHAR(100)
     )
 `);
@@ -19,7 +19,17 @@ const addRace = (name, date, location) => {
     });
 };
 
-const getRaceById = (id) => {
+const getAllTheRaces = () => {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM races`;
+        db.get(query, [], (err, row) => {
+            if (err) reject(err);
+            resolve(row);
+        });
+    });
+};
+
+const getTheRaceById = (id) => {
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM races WHERE id = ?`;
         db.get(query, [id], (err, row) => {
@@ -29,4 +39,4 @@ const getRaceById = (id) => {
     });
 };
 
-module.exports = { addRace, getRaceById };
+module.exports = { addRace, getAllTheRaces, getTheRaceById };

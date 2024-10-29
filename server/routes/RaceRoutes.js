@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { createRace, getRaceByIdController} = require('../controllers/RaceController');
+const { createRace, getAllRaces, getRaceById} = require('../controllers/RaceController');
 
 router.post('/create', createRace);
-router.get('/:id', getRaceByIdController);
+router.get('/all', getAllRaces);
+router.get('/:id', getRaceById);
 
 module.exports = router;

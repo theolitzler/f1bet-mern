@@ -1,4 +1,4 @@
-const { addDriver, getAllDrivers } = require('../models/Driver');
+const { addDriver, getAllTheDrivers } = require('../models/Driver');
 
 const createDriver = async (req, res) => {
     const { name, team, nationality } = req.body;
@@ -10,13 +10,13 @@ const createDriver = async (req, res) => {
     }
 };
 
-const getAllDriversController = async (req, res) => {
+const getAllDrivers = async (req, res) => {
     try {
-        const drivers = await getAllDrivers();
+        const drivers = await getAllTheDrivers();
         res.status(200).json(drivers);
     } catch (error) {
         res.status(500).json({ error: 'Erreur lors de la récupération des pilotes.' });
     }
 };
 
-module.exports = { createDriver, getAllDriversController };
+module.exports = { createDriver, getAllDrivers };

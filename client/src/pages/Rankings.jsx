@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import {API_BASE_URL} from "../services/ApiConfig.jsx";
 import { UserOutlined, CrownOutlined } from '@ant-design/icons';
 import Navbar from "../components/Navbar.jsx";
 
@@ -9,7 +10,7 @@ const Rankings = () => {
 
     useEffect(() => {
         // Fetch the rankings from the backend
-        axios.get('http://localhost:9000/users/rankings')
+        axios.get(`${API_BASE_URL}/users/rankings`)
             .then(response => {
                 setRankings(response.data);
             })

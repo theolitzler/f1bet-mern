@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import {API_BASE_URL} from "../services/ApiConfig.jsx";
 
 const LoginForm = () => {
     const [email, setEmail] = useState("");
@@ -8,11 +9,10 @@ const LoginForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:9000/auth/login", { email, password });
+            const response = await axios.post(`${API_BASE_URL}/auth/login`, { email, password });
             console.log(response.data);
             localStorage.setItem("token", response.data.token);
             // Handle successful login
-            // eslint-disable-next-line no-undef
             window.location.href = 'http://localhost:5173/';
         } catch (error) {
             console.error("Login failed", error);

@@ -3,6 +3,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import DriverTile from './DriverTile';
 import jwt from "jsonwebtoken";
+import {API_BASE_URL} from "../services/ApiConfig.jsx";
 
 const DriverList = () => {
   const [driverList, setDriverList] = useState([]);
@@ -10,7 +11,7 @@ const DriverList = () => {
   useEffect(() => {
     const fetchDrivers = async () => {
       try {
-        const response = await fetch('http://localhost:9000/drivers/all');
+        const response = await fetch(`${API_BASE_URL}/drivers/all`);
         const data = await response.json();
 
         if (data.success) {
@@ -53,7 +54,7 @@ const DriverList = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:9000/bet', {
+      const response = await fetch(`${API_BASE_URL}/bets`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -75,7 +76,7 @@ const DriverList = () => {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={HTML5Backend} manager={}>
       <div className="p-4">
         {driverList.map((driver, index) => (
           <DriverTile key={driver._id} index={index} driver={driver} moveTile={moveTile} />

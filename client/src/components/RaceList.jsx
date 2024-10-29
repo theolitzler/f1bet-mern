@@ -3,6 +3,7 @@ import axios from "axios";
 import Flag from "react-world-flags";
 import { useNavigate } from "react-router-dom";
 import { RightOutlined } from "@ant-design/icons/lib/icons";
+import {API_BASE_URL} from "../services/ApiConfig.jsx";
 
 const options = {
   day: "numeric",
@@ -20,7 +21,7 @@ const RaceList = ({ type }) => {
   useEffect(() => {
     const fetchRaces = async () => {
       const response = await axios.get(
-        `http://localhost:9000/races/${type}`
+        `${API_BASE_URL}/races/${type}`
       );
       setRaces(response.data.message);
     };

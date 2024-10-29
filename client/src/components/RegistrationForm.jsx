@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import {API_BASE_URL} from "../services/ApiConfig.jsx";
 
 const RegistrationForm = () => {
     const [username, setUsername] = useState("");
@@ -9,7 +10,7 @@ const RegistrationForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:9000/auth/register", { username, email, password });
+            const response = await axios.post(`${API_BASE_URL}/auth/register`, { username, email, password });
             console.log(response.data);
             // Handle successful registration
             // eslint-disable-next-line no-undef
