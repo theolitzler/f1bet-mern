@@ -1,4 +1,4 @@
-const db = require('../config/db')();
+const db = require('../config/databaseConnection');
 
 db.run(`
     CREATE TABLE IF NOT EXISTS drivers (

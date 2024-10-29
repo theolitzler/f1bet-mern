@@ -2,54 +2,35 @@ const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const app = express();
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const betRoutes = require('./routes/betRoutes');
+const driverRoutes = require('./routes/driverRoutes');
+const raceRoutes = require('./routes/raceRoutes');
+
 const PORT = 5000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Connexion à la base de données SQLite
-const db = new sqlite3.Database('./database.db', (err) => {
-    if (err) {
-        console.error("Erreur lors de l'ouverture de la base de données", err.message);
-    } else {
-        console.log("Connexion à SQLite réussie.");
-    }
+// Définir les chemins pour chaque ressource
+app.use('/api/auth', authRoutes);       // Routes d'authentification
+app.use('/api/users', userRoutes);      // Routes pour les utilisateurs
+app.use('/api/bets', betRoutes);        // Routes pour les paris
+app.use('/api/drivers', driverRoutes);  // Routes pour les pilotes
+app.use('/api/races', raceRoutes);      // Routes pour les courses
+
+// Gestion des erreurs 404 pour les routes inconnues
+app.use((req, res, next) => {
+    res.status(404).json({ error: 'Route non trouvée' });
 });
 
-// // Initialisation de la base de données
-// db.run(`
-//     CREATE TABLE IF NOT EXISTS items (
-//         id INTEGER PRIMARY KEY AUTOINCREMENT,
-//         name TEXT NOT NULL,
-//         description TEXT
-//     )
-// `);
-//
-// // Routes
-// app.get('/api/items', (req, res) => {
-//     db.all("SELECT * FROM items", [], (err, rows) => {
-//         if (err) {
-//             res.status(400).json({ error: err.message });
-//             return;
-//         }
-//         res.json({ data: rows });
-//     });
-// });
-//
-// app.post('/api/items', (req, res) => {
-//     const { name, description } = req.body;
-//     db.run(`INSERT INTO items (name, description) VALUES (?, ?)`,
-//         [name, description],
-//         function(err) {
-//             if (err) {
-//                 res.status(400).json({ error: err.message });
-//                 return;
-//             }
-//             res.json({ data: { id: this.lastID, name, description } });
-//         }
-//     );
-// });
+// Middleware global de gestion des erreurs
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Erreur interne du serveur' });
+});
 
 app.listen(PORT, () => {
     console.log(`Serveur backend démarré sur http://localhost:${PORT}`);
