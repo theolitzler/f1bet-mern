@@ -9,7 +9,7 @@ const driverRouter = require("./routes/DriverRoutes");
 const betRouter = require("./routes/BetRoutes");
 const userRouter = require("./routes/UserRoutes");
 
-const port = process.env.PORT || 9000;
+const port = process.env.PORT || 5000;
 const app = express();
 
 app.use(cors());

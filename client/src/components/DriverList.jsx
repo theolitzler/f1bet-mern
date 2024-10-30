@@ -76,10 +76,10 @@ const DriverList = () => {
   };
 
   return (
-    <DndProvider backend={HTML5Backend} manager={}>
+    <DndProvider backend={HTML5Backend}>
       <div className="p-4">
         {driverList.map((driver, index) => (
-          <DriverTile key={driver._id} index={index} driver={driver} moveTile={moveTile} />
+          <DriverTile key={driver.id} index={index} driver={driver} moveTile={moveTile} />
         ))}
         <button
           onClick={saveList}

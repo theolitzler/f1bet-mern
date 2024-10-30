@@ -21,13 +21,13 @@ const RaceList = ({ type }) => {
   useEffect(() => {
     const fetchRaces = async () => {
       const response = await axios.get(
-        `${API_BASE_URL}/races/${type}`
+        `http://localhost:5000/api/races/all`
       );
       setRaces(response.data.message);
     };
 
     fetchRaces();
-  }, [type]);
+  }, []);
 
   const handleRaceClick = (raceId) => {
     if (type == "upcoming") {
@@ -39,8 +39,8 @@ const RaceList = ({ type }) => {
     <div>
       {races.map((race) => (
         <div
-          key={race._id}
-          onClick={() => handleRaceClick(race._id)}
+          key={race.id}
+          onClick={() => handleRaceClick(race.id)}
           className="race-item flex items-center justify-between p-4 border-b"
         >
           <div className="flex items-center">

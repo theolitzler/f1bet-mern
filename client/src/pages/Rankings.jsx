@@ -51,7 +51,7 @@ const Rankings = () => {
                 <div className="bg-white pb-4 shadow">
                     <ul className="p-4">
                         {rankings.map((user, index) => (
-                            <li key={user._id}
+                            <li key={user.id}
                                 className="flex justify-between items-center p-2 bg-gray-100 rounded-lg mb-2">
                                 <div className="flex items-center">
                                     <span className="text-lg font-bold mx-4">{index + 1}</span>
