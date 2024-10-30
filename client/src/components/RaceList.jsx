@@ -23,7 +23,8 @@ const RaceList = ({ type }) => {
       const response = await axios.get(
         `http://localhost:5000/api/races/all`
       );
-      setRaces(response.data.message);
+      setRaces(response.data);
+      console.log(races);
     };
 
     fetchRaces();

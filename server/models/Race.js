@@ -5,7 +5,8 @@ db.run(`
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name VARCHAR(100) NOT NULL,
         date DATETIME NOT NULL,
-        location VARCHAR(100)
+        location VARCHAR(100) NOT NULL,
+        countryCode VARCHAR(3) NOT NULL
     )
 `);
 
@@ -22,7 +23,7 @@ const addRace = (name, date, location) => {
 const getAllTheRaces = () => {
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM races`;
-        db.get(query, [], (err, row) => {
+        db.all(query, [], (err, row) => {
             if (err) reject(err);
             resolve(row);
         });
