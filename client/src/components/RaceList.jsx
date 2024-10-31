@@ -3,7 +3,7 @@ import axios from "axios";
 import Flag from "react-world-flags";
 import { useNavigate } from "react-router-dom";
 import { RightOutlined } from "@ant-design/icons/lib/icons";
-import {API_BASE_URL} from "../services/ApiConfig.jsx";
+import { API_BASE_URL } from "../services/ApiConfig.jsx";
 
 const options = {
   day: "numeric",
@@ -20,18 +20,27 @@ const RaceList = ({ type }) => {
 
   useEffect(() => {
     const fetchRaces = async () => {
-      const response = await axios.get(
-        `http://localhost:5000/api/races/all`
-      );
-      setRaces(response.data);
-      console.log(races);
+      const response = await axios.get(`${API_BASE_URL}/races/all`);
+      const currentTime = Date.now();
+
+      const filteredRaces = response.data.filter((race) => {
+        const raceDate = new Date(race.date).getTime();
+        return type === "upcoming" ? raceDate > currentTime : raceDate < currentTime;
+      });
+
+      // Si le type est "completed", trier les courses par date décroissante
+      if (type === "completed") {
+        filteredRaces.sort((a, b) => new Date(b.date) - new Date(a.date));
+      }
+
+      setRaces(filteredRaces);
     };
 
     fetchRaces();
-  }, []);
+  }, [type]);
 
   const handleRaceClick = (raceId) => {
-    if (type == "upcoming") {
+    if (type === "upcoming") {
       navigate(`/races/${raceId}`);
     }
   };
@@ -66,7 +75,7 @@ const RaceList = ({ type }) => {
             <div className="ml-4">
               <h2 className="text-lg font-bold">{race.name}</h2>
               <p className="text-gray-500">
-                {new Date(race.date).toLocaleDateString("en-GB", options)}
+                {new Date(race.date).toLocaleDateString(undefined, options)}
               </p>
             </div>
           </div>
@@ -75,14 +84,8 @@ const RaceList = ({ type }) => {
               {race.location}
             </span>
           )}
-          {type == "upcoming" && (
-            <RightOutlined />
-          )}
-          {type == "completed" && (
-            <div>
-              {/* @TODO add the bet result here */}
-            </div>
-          )}
+          {type === "upcoming" && <RightOutlined />}
+          {type === "completed" && <div>{/* @TODO add the bet result here */}</div>}
         </div>
       ))}
     </div>
