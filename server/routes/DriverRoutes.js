@@ -3,6 +3,6 @@ const router = express.Router();
 const { createDriver, getAllDrivers} = require('../controllers/DriverController');
 
 router.post('/create', createDriver);
-router.get('/', getAllDrivers);
+router.get('/all', getAllDrivers);
 
 module.exports = router;

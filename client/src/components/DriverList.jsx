@@ -14,10 +14,10 @@ const DriverList = () => {
         const response = await fetch(`${API_BASE_URL}/drivers/all`);
         const data = await response.json();
 
-        if (data.success) {
-          setDriverList(data.message);
+        if (response.status === 200) {
+          setDriverList(data);
         } else {
-          console.error('Failed to fetch drivers:', data.message);
+          console.error('Failed to fetch drivers:', data);
         }
       } catch (error) {
         console.error('Error fetching drivers:', error);
@@ -25,7 +25,7 @@ const DriverList = () => {
     };
 
     fetchDrivers();
-  }, []);
+  }, [API_BASE_URL]);
 
   const moveTile = (dragIndex, hoverIndex) => {
     const dragDriver = driverList[dragIndex];
