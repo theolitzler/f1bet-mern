@@ -17,6 +17,7 @@ const options = {
 const RaceList = ({ type }) => {
   const [races, setRaces] = useState([]);
   const navigate = useNavigate();
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   useEffect(() => {
     const fetchRaces = async () => {
@@ -75,7 +76,10 @@ const RaceList = ({ type }) => {
             <div className="ml-4">
               <h2 className="text-lg font-bold">{race.name}</h2>
               <p className="text-gray-500">
-                {new Date(race.date).toLocaleDateString(undefined, options)}
+                {new Date(race.date).toLocaleString(undefined, {
+                  ...options,
+                  timeZone: userTimeZone,
+                })}
               </p>
             </div>
           </div>
