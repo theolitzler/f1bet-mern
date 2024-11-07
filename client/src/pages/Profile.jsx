@@ -17,7 +17,7 @@ const Profile = () => {
                 setIsAuthenticated(true);
                 setUser(decoded);
             } catch (error) {
-                console.error("Invalid token", error);
+                console.error("Token invalide", error);
                 setIsAuthenticated(false);
             }
         }
