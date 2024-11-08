@@ -42,8 +42,18 @@ const DriverList = () => {
     }));
 
     const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      return; // Interrompre si aucun token n'est trouvé
+    }
+
     const decoded = jwt.decode(token);
     const userId = decoded?.userId;
+
+    if (!userId) {
+      console.error('Invalid token or no user ID');
+      return; // Interrompre si le token n'est pas valide ou userId est manquant
+    }
 
     const raceId = location.pathname.split("/").pop();
 
@@ -58,7 +68,7 @@ const DriverList = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${token}`, // Assurez-vous que le token est inclus
         },
         body: JSON.stringify(payload)
       });
