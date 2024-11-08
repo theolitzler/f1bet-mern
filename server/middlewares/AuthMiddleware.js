@@ -2,7 +2,9 @@ const { getUserById } = require('../models/User');
 const jwt = require('jsonwebtoken');
 
 const authMiddleware = async (req, res, next) => {
-  const token = req.header('Authorization').replace('Bearer ', '');
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await getUserById(decoded.id); // SQLite
@@ -10,7 +12,7 @@ const authMiddleware = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    res.status(401).send({ error: 'Veuillez vous authentifier.' });
+    res.status(401).json({ error: 'Veuillez vous authentifier.' });
   }
 };
 

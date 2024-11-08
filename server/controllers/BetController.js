@@ -1,14 +1,36 @@
-const { addBet, getBetsByUser, getBetById } = require('../models/Bet');
+const Bet = require('../models/Bet');
+const BetPrediction = require('../models/BetPrediction');
 
 // Crée un nouveau pari
 const createBet = async (req, res) => {
-    const { userId, raceId } = req.body;
+    const { raceId, predictions } = req.body; // `predictions` est un tableau de { driverId, predictedPosition }
+    const userId = req.user.id; // Assure-toi que l'utilisateur est authentifié
+
     try {
-        const betId = await addBet(userId, raceId);
-        res.status(201).json({ id: betId, userId, raceId });
+        // Crée le pari
+        const newBet = await Bet.addBet(userId, raceId);
+
+        // Ajoute les prédictions
+        const predictionsData = predictions.map(prediction => ({
+            bet_id: newBet.id,
+            driver_id: prediction.id,
+            predicted_position: prediction.position
+        }));
+
+        await BetPrediction.bulkCreate(predictionsData);
+
+        res.status(201).json({ message: 'Bet and predictions saved successfully' });
     } catch (error) {
-        res.status(500).json({ error: 'Erreur lors de la création du pari.' });
+        res.status(500).json({ error: 'Failed to create bet' });
     }
+
+    // const { userId, raceId } = req.body;
+    // try {
+    //     const betId = await addBet(userId, raceId);
+    //     res.status(201).json({ id: betId, userId, raceId });
+    // } catch (error) {
+    //     res.status(500).json({ error: 'Erreur lors de la création du pari.' });
+    // }
 };
 
 // Récupère tous les paris d'un utilisateur

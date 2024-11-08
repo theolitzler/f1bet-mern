@@ -9,6 +9,7 @@ db.run(`
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (race_id) REFERENCES races(id)
+        UNIQUE(user_id, race_id)
     )
 `);
 

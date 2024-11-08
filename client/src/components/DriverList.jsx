@@ -3,7 +3,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import DriverTile from './DriverTile';
 import jwt from "jsonwebtoken";
-import {API_BASE_URL} from "../services/ApiConfig.jsx";
+import { API_BASE_URL } from "../services/ApiConfig.jsx";
 
 const DriverList = () => {
   const [driverList, setDriverList] = useState([]);
@@ -57,7 +57,8 @@ const DriverList = () => {
       const response = await fetch(`${API_BASE_URL}/bets`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify(payload)
       });
@@ -72,7 +73,7 @@ const DriverList = () => {
       console.error('Error saving prediction:', error);
     }
 
-    console.log(JSON.stringify(payload));
+    // console.log(JSON.stringify(payload));
   };
 
   return (

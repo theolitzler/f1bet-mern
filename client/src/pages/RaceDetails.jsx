@@ -28,7 +28,7 @@ const RaceDetails = () => {
     };
 
     fetchRace();
-  }, [location.pathname, API_BASE_URL]);
+  }, [location.pathname]);
 
   if (!race) {
     return <p>Loading...</p>; // Gestion de l'état de chargement
