@@ -1,4 +1,4 @@
-INSERT INTO Drivers (name, pilotNumber, team, nationality) VALUES
+INSERT INTO drivers (name, pilotNumber, team, nationality) VALUES
 ('Max Verstappen', 1, 'Red Bull Racing', 'NED'),
 ('Sergio Perez', 11, 'Red Bull Racing', 'MEX'),
 ('Lewis Hamilton', 44, 'Mercedes', 'GBR'),

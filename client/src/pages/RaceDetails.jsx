@@ -13,7 +13,7 @@ const RaceDetails = () => {
     const fetchRace = async () => {
       try {
         const raceId = location.pathname.split("/").pop();
-        console.log(`${API_BASE_URL}/races/${raceId}`);
+        // console.log(`${API_BASE_URL}/races/${raceId}`);
         const response = await fetch(`${API_BASE_URL}/races/${raceId}`);
         const data = await response.json();
 
@@ -28,7 +28,7 @@ const RaceDetails = () => {
     };
 
     fetchRace();
-  }, [location.pathname, API_BASE_URL]);
+  }, [location.pathname]);
 
   if (!race) {
     return <p>Loading...</p>; // Gestion de l'état de chargement

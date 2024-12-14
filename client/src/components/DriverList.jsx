@@ -3,7 +3,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import DriverTile from './DriverTile';
 import jwt from "jsonwebtoken";
-import {API_BASE_URL} from "../services/ApiConfig.jsx";
+import { API_BASE_URL } from "../services/ApiConfig.jsx";
 
 const DriverList = () => {
   const [driverList, setDriverList] = useState([]);
@@ -17,7 +17,7 @@ const DriverList = () => {
         if (response.status === 200) {
           setDriverList(data);
         } else {
-          console.error('Failed to fetch drivers:', data);
+          throw new Error(data.message || 'Failed to fetch drivers');
         }
       } catch (error) {
         console.error('Error fetching drivers:', error);
@@ -36,43 +36,47 @@ const DriverList = () => {
   };
 
   const saveList = async () => {
-    const driverOrder = driverList.map((driver, index) => ({
-      position: index + 1,
-      ...driver,
-    }));
-
     const token = localStorage.getItem('token');
-    const decoded = jwt.decode(token);
-    const userId = decoded?.userId;
+    if (!token) {
+      alert('Vous devez être connecté pour enregistrer une prédiction');
+      return;
+    }
 
-    const raceId = location.pathname.split("/").pop();
-
-    const payload = {
-      userId: userId,
-      raceId: raceId,
-      prediction: driverOrder
-    };
-
+    let userId, raceId;
     try {
+      const decoded = jwt.decode(token);
+      userId = decoded?.id;
+      raceId = parseInt(location.pathname.split("/").pop(), 10);
+
+      if (!userId || !raceId) {
+        throw new Error('Invalid user or race information');
+      }
+
+      const predictions = driverList.map((driver, index) => ({
+        id: driver.id,
+        position: index + 1
+      }));
+
       const response = await fetch(`${API_BASE_URL}/bets`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Vérifiez le format "Bearer"
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ raceId, predictions })
       });
 
       const result = await response.json();
-      if (result.success) {
-        console.log('Prediction saved successfully:', result.message);
+
+      if (response.ok) {
+        alert('Votre prédiction a été enregistrée avec succès !');
       } else {
-        console.error('Failed to save prediction:', result.message);
+        throw new Error(result.error || 'Erreur lors de la sauvegarde de la prédiction');
       }
     } catch (error) {
       console.error('Error saving prediction:', error);
+      alert(error.message);
     }
-
-    console.log(JSON.stringify(payload));
   };
 
   return (

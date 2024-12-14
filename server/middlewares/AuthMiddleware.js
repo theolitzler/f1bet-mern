@@ -1,17 +1,19 @@
-const { getUserById } = require('../models/User');
 const jwt = require('jsonwebtoken');
 
-const authMiddleware = async (req, res, next) => {
-  const token = req.header('Authorization').replace('Bearer ', '');
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1]; // Bearer TOKEN
+
+  if (!token) {
+    return res.status(403).json({ error: 'No token provided' });
+  }
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await getUserById(decoded.id); // SQLite
-    if (!user) throw new Error();
-    req.user = user;
+    req.user = decoded; // Attachez l'utilisateur décodé à la requête
     next();
   } catch (error) {
-    res.status(401).send({ error: 'Veuillez vous authentifier.' });
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 };
 
-module.exports = authMiddleware;
+module.exports = verifyToken;
