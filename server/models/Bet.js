@@ -5,6 +5,8 @@ db.run(`
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         race_id INTEGER NOT NULL,
+        score INTEGER DEFAULT NULL,  // Nouveau champ pour stocker le score
+        is_scored BOOLEAN DEFAULT 0, // Indicateur si le pari a été scoré
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id),
