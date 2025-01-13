@@ -15,8 +15,11 @@ const addRaceResult = (raceId, driverId, position) => {
     return new Promise((resolve, reject) => {
         const query = `INSERT INTO race_results (race_id, driver_id, actual_position) VALUES (?, ?, ?)`;
         db.run(query, [raceId, driverId, position], function (err) {
-            if (err) reject(err);
-            resolve(this.lastID);
+            if (err) {
+                reject(new Error(`Failed to add race result: ${err.message}`));
+            } else {
+                resolve(this.lastID);
+            }
         });
     });
 };

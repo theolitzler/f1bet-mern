@@ -6,7 +6,11 @@ const getUserById = async (req, res) => {
         const user = await getUserById(id);
         res.status(200).json(user);
     } catch (error) {
-        res.status(500).json({ error: 'Erreur lors de la récupération de l\'utilisateur.' });
+        console.error('Error retrieving user:', error);
+        res.status(500).json({ 
+            error: 'Failed to retrieve user',
+            details: error.message 
+        });
     }
 };
 

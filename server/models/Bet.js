@@ -15,10 +15,10 @@ db.run(`
     )
 `);
 
-const addBet = (userId, raceId) => {
+const createBet = (userId, raceId) => {
     return new Promise((resolve, reject) => {
         const query = `
-            INSERT INTO bets (user_id, race_id) 
+            INSERT INTO bets (user_id, race_id)
             SELECT ?, ? 
             WHERE NOT EXISTS (
                 SELECT 1 FROM bets 
@@ -27,9 +27,9 @@ const addBet = (userId, raceId) => {
         `;
         db.run(query, [userId, raceId, userId, raceId], function (err) {
             if (err) {
-                reject(new Error(`Failed to create bet: ${err.message}`));
+                reject(new Error(`Failed to create bet for user_id: ${userId}, race_id: ${raceId}. Error: ${err.message}`));
             } else if (this.changes === 0) {
-                reject(new Error('Bet already exists for this user and race'));
+                reject(new Error(`Bet already exists for user_id: ${userId}, race_id: ${raceId}`));
             } else {
                 resolve({ id: this.lastID });
             }
@@ -46,8 +46,11 @@ const getBetsByUser = (userId) => {
             WHERE b.user_id = ?
         `;
         db.all(query, [userId], (err, rows) => {
-            if (err) reject(new Error(`Failed to retrieve bets: ${err.message}`));
-            resolve(rows);
+            if (err) {
+                reject(new Error(`Failed to retrieve bets for user_id: ${userId}. Error: ${err.message}`));
+            } else {
+                resolve(rows);
+            }
         });
     });
 };
@@ -63,10 +66,13 @@ const getBetById = (betId) => {
             WHERE b.id = ?
         `;
         db.get(query, [betId], (err, row) => {
-            if (err) reject(new Error(`Failed to retrieve bet: ${err.message}`));
-            resolve(row || null);
+            if (err) {
+                reject(new Error(`Failed to retrieve bet with id: ${betId}. Error: ${err.message}`));
+            } else {
+                resolve(row);
+            }
         });
     });
 };
 
-module.exports = { addBet, getBetsByUser, getBetById };
+module.exports = { createBet, getBetsByUser, getBetById };

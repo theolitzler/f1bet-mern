@@ -9,10 +9,14 @@ const verifyToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Attachez l'utilisateur décodé à la requête
+    req.user = decoded; // Attach the decoded user to the request
     next();
   } catch (error) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    console.error('Token verification error:', error);
+    return res.status(401).json({ 
+      error: 'Unauthorized',
+      details: error.message 
+    });
   }
 };
 

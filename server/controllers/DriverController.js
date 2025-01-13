@@ -6,7 +6,11 @@ const createDriver = async (req, res) => {
         const driverId = await addDriver(name, team, nationality);
         res.status(201).json({ id: driverId, name, team, nationality });
     } catch (error) {
-        res.status(500).json({ error: 'Erreur lors de la création du pilote.' });
+        console.error('Error creating driver:', error);
+        res.status(500).json({ 
+            error: 'Failed to create driver',
+            details: error.message 
+        });
     }
 };
 
@@ -15,7 +19,11 @@ const getAllDrivers = async (req, res) => {
         const drivers = await getAllTheDrivers();
         res.status(200).json(drivers);
     } catch (error) {
-        res.status(500).json({ error: 'Erreur lors de la récupération des pilotes.' });
+        console.error('Error retrieving drivers:', error);
+        res.status(500).json({ 
+            error: 'Failed to retrieve drivers',
+            details: error.message 
+        });
     }
 };
 

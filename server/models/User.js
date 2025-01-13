@@ -1,6 +1,5 @@
 const db = require('../config/databaseConnection');
 
-// Crée la table des utilisateurs si elle n'existe pas
 db.run(`
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -11,24 +10,28 @@ db.run(`
     )
 `);
 
-// Fonction pour ajouter un utilisateur
 const addUser = (username, email, passwordHash) => {
     return new Promise((resolve, reject) => {
         const query = `INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)`;
         db.run(query, [username, email, passwordHash], function (err) {
-            if (err) reject(err);
-            resolve(this.lastID); // Renvoie l'ID du nouvel utilisateur
+            if (err) {
+                reject(new Error(`Failed to add user: ${err.message}`));
+            } else {
+                resolve(this.lastID);
+            }
         });
     });
 };
 
-// Fonction pour récupérer un utilisateur par son email
 const getUserByEmail = (email) => {
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM users WHERE email = ?`;
         db.get(query, [email], (err, row) => {
-            if (err) reject(err);
-            resolve(row);
+            if (err) {
+                reject(new Error(`Failed to retrieve user by email: ${err.message}`));
+            } else {
+                resolve(row);
+            }
         });
     });
 };

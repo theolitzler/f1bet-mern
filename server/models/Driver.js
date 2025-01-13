@@ -14,8 +14,11 @@ const addDriver = (name, pilotNumber, team, nationality) => {
     return new Promise((resolve, reject) => {
         const query = `INSERT INTO drivers (name, pilotNumber, team, nationality) VALUES (?, ?, ?, ?)`;
         db.run(query, [name, pilotNumber, team, nationality], function (err) {
-            if (err) reject(err);
-            else resolve(this.lastID);
+            if (err) {
+                reject(new Error(`Failed to add driver: ${err.message}`));
+            } else {
+                resolve(this.lastID);
+            }
         });
     });
 };
@@ -24,8 +27,11 @@ const getAllTheDrivers = () => {
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM drivers`;
         db.all(query, [], (err, rows) => {
-            if (err) reject(err);
-            else resolve(rows);
+            if (err) {
+                reject(new Error(`Failed to retrieve drivers: ${err.message}`));
+            } else {
+                resolve(rows);
+            }
         });
     });
 };
