@@ -1,6 +1,7 @@
 const Bet = require('../models/Bet');
 const BetPrediction = require('../models/BetPrediction');
 
+// Crée un nouveau pari
 const createBet = async (req, res) => {
     try {
         if (!req.user || !req.user.id) {
@@ -10,8 +11,10 @@ const createBet = async (req, res) => {
         const { raceId, predictions } = req.body;
         const userId = req.user.id;
 
+        // Crée le pari
         const newBet = await Bet.addBet(userId, raceId);
 
+        // Ajoute les prédictions
         const predictionsData = predictions.map(prediction => ({
             bet_id: newBet.id,
             driver_id: prediction.id,
@@ -30,20 +33,18 @@ const createBet = async (req, res) => {
     }
 };
 
+// Récupère tous les paris d'un utilisateur
 const getBet = async (req, res) => {
     const { userId } = req.query;
     try {
         const bets = await getBetsByUser(userId);
         res.status(200).json(bets);
     } catch (error) {
-        console.error('Error retrieving bets:', error);
-        res.status(500).json({ 
-            error: 'Failed to retrieve bets',
-            details: error.message 
-        });
+        res.status(500).json({ error: 'Erreur lors de la récupération des paris.' });
     }
 };
 
+// Récupère un pari par son ID
 const getBetByID = async (req, res) => {
     const { betId } = req.params;
     try {
@@ -51,14 +52,10 @@ const getBetByID = async (req, res) => {
         if (bet) {
             res.status(200).json(bet);
         } else {
-            res.status(404).json({ error: 'Bet not found' });
+            res.status(404).json({ error: 'Pari non trouvé.' });
         }
     } catch (error) {
-        console.error('Error retrieving bet:', error);
-        res.status(500).json({ 
-            error: 'Failed to retrieve bet',
-            details: error.message 
-        });
+        res.status(500).json({ error: 'Erreur lors de la récupération du pari.' });
     }
 };
 
