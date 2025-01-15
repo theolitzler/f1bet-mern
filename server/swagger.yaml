@@ -1,0 +1,277 @@
+openapi: 3.0.0
+info:
+  title: F1Bet API
+  version: 1.0.0
+  description: API documentation for the F1Bet application
+servers:
+  - url: http://localhost:5000/api
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - email
+                - password
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Email already in use
+        '500':
+          description: Internal server error
+
+  /auth/login:
+    post:
+      summary: Login a user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: User logged in successfully
+        '400':
+          description: Incorrect credentials
+        '500':
+          description: Internal server error
+
+  /users/{id}:
+    get:
+      summary: Get user by ID
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: User ID
+      responses:
+        '200':
+          description: User retrieved successfully
+        '500':
+          description: Internal server error
+
+  /bets:
+    post:
+      summary: Create a new bet
+      tags:
+        - Bets
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                raceId:
+                  type: integer
+                predictions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      position:
+                        type: integer
+              required:
+                - raceId
+                - predictions
+      responses:
+        '201':
+          description: Bet created successfully
+        '401':
+          description: Authentication required
+        '500':
+          description: Internal server error
+
+    get:
+      summary: Get all bets for a user
+      tags:
+        - Bets
+      parameters:
+        - in: query
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: User ID
+      responses:
+        '200':
+          description: Bets retrieved successfully
+        '500':
+          description: Internal server error
+
+  /bets/{betId}:
+    get:
+      summary: Get bet by ID
+      tags:
+        - Bets
+      parameters:
+        - in: path
+          name: betId
+          schema:
+            type: integer
+          required: true
+          description: Bet ID
+      responses:
+        '200':
+          description: Bet retrieved successfully
+        '404':
+          description: Bet not found
+        '500':
+          description: Internal server error
+
+  /drivers/create:
+    post:
+      summary: Create a new driver
+      tags:
+        - Drivers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                team:
+                  type: string
+                nationality:
+                  type: string
+              required:
+                - name
+                - team
+                - nationality
+      responses:
+        '201':
+          description: Driver created successfully
+        '500':
+          description: Internal server error
+
+  /drivers/all:
+    get:
+      summary: Get all drivers
+      tags:
+        - Drivers
+      responses:
+        '200':
+          description: Drivers retrieved successfully
+        '500':
+          description: Internal server error
+
+  /races/create:
+    post:
+      summary: Create a new race
+      tags:
+        - Races
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                date:
+                  type: string
+                  format: date-time
+                location:
+                  type: string
+              required:
+                - name
+                - date
+                - location
+      responses:
+        '201':
+          description: Race created successfully
+        '500':
+          description: Internal server error
+
+  /races/all:
+    get:
+      summary: Get all races
+      tags:
+        - Races
+      responses:
+        '200':
+          description: Races retrieved successfully
+        '500':
+          description: Internal server error
+
+  /races/{id}:
+    get:
+      summary: Get race by ID
+      tags:
+        - Races
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Race ID
+      responses:
+        '200':
+          description: Race retrieved successfully
+        '500':
+          description: Internal server error
+
+  /races/{id}/calculate-scores:
+    post:
+      summary: Calculate bet scores for a race
+      tags:
+        - Races
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Race ID
+      responses:
+        '201':
+          description: Scores calculated successfully
+        '500':
+          description: Internal server error
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
