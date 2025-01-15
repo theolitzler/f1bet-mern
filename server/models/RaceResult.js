@@ -37,4 +37,4 @@ const getRaceResults = (raceId) => {
     });
 };
 
-module.exports = { addRaceResult };
+module.exports = { addRaceResult, getRaceResults };

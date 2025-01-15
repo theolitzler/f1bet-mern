@@ -150,4 +150,4 @@ const updateBetScore = (betId, score) => {
     });
 };
 
-module.exports = { addBet, getBetsByUser, getBetById };
+module.exports = { addBet, getBetsByUser, getBetById, calculateBetScores };

@@ -1,4 +1,5 @@
 const { addRace, getAllTheRaces, getTheRaceById } = require('../models/Race');
+const { calculateBetScores } = require('../models/Bet');
 
 const createRace = async (req, res) => {
     const { name, date, location } = req.body;
@@ -29,7 +30,7 @@ const getRaceById = async (req, res) => {
     }
 };
 
-const calculateBetScores = async (req, res) => {
+const postCalculateBetScores = async (req, res) => {
     try {
         await calculateBetScores(req.params.raceId);
         res.status(201).json({ message: 'Scores calculated successfully' });
@@ -38,4 +39,4 @@ const calculateBetScores = async (req, res) => {
     }
 };
 
-module.exports = { createRace, getAllRaces, getRaceById, calculateBetScores };
+module.exports = { createRace, getAllRaces, getRaceById, postCalculateBetScores };
