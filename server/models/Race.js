@@ -1,4 +1,18 @@
 const db = require('../config/databaseConnection');
+const fs = require('fs');
+const path = require('path');
+
+const initializeRaces = () => {
+    const sqlFile = path.join(__dirname, '../scripts/races.sql');
+    const sql = fs.readFileSync(sqlFile, 'utf8');
+    db.exec(sql, (err) => {
+        if (err) {
+            console.error('Error initializing races:', err.message);
+        } else {
+            console.log('Races table initialized successfully');
+        }
+    });
+};
 
 db.run(`
     CREATE TABLE IF NOT EXISTS races (
@@ -8,7 +22,14 @@ db.run(`
         location VARCHAR(100) NOT NULL,
         countryCode VARCHAR(3) NOT NULL
     )
-`);
+`, (err) => {
+    if (err) {
+        console.error('Error creating races table:', err.message);
+    } else {
+        // Initialize data after table creation
+        initializeRaces();
+    }
+});
 
 const addRace = (name, date, location) => {
     return new Promise((resolve, reject) => {
