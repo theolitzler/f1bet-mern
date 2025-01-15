@@ -29,4 +29,13 @@ const getRaceById = async (req, res) => {
     }
 };
 
-module.exports = { createRace, getAllRaces, getRaceById };
+const calculateBetScores = async (req, res) => {
+    try {
+        await calculateBetScores(req.params.raceId);
+        res.status(201).json({ message: 'Scores calculated successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Erreur lors du calcul des scores.' });
+    }
+};
+
+module.exports = { createRace, getAllRaces, getRaceById, calculateBetScores };

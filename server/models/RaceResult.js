@@ -21,4 +21,20 @@ const addRaceResult = (raceId, driverId, position) => {
     });
 };
 
+const getRaceResults = (raceId) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT rr.*, d.name as driver_name, d.team
+            FROM race_results rr
+            JOIN drivers d ON rr.driver_id = d.id
+            WHERE rr.race_id = ?
+            ORDER BY rr.actual_position ASC
+        `;
+        db.all(query, [raceId], (err, rows) => {
+            if (err) reject(err);
+            else resolve(rows);
+        });
+    });
+};
+
 module.exports = { addRaceResult };
