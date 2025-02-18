@@ -4,20 +4,21 @@ import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../services/ApiConfig.jsx";
 import { useLocation } from 'react-router-dom';
 import Flag from "react-world-flags";
+import axios from 'axios';
 
 const RaceDetails = () => {
-  const [race, setRace] = useState(null); // Initialisé à null
+  const [race, setRace] = useState(null);
+  const [hasBet, setHasBet] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
     const fetchRace = async () => {
       try {
         const raceId = location.pathname.split("/").pop();
-        // console.log(`${API_BASE_URL}/races/${raceId}`);
         const response = await fetch(`${API_BASE_URL}/races/${raceId}`);
         const data = await response.json();
 
-        if (response.status === 200) { // Utilisation de ===
+        if (response.status === 200) {
           setRace(data);
         } else {
           console.error('Failed to fetch race info:', data);
@@ -27,11 +28,27 @@ const RaceDetails = () => {
       }
     };
 
+    const checkBetStatus = async () => {
+      try {
+        const raceId = location.pathname.split("/").pop();
+        const response = await axios.get(`${API_BASE_URL}/bets/check/${raceId}`, {
+          params: { raceId },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        setHasBet(response.data.hasBet);
+      } catch (error) {
+        console.error('Error checking bet status:', error);
+      }
+    };
+
     fetchRace();
+    checkBetStatus();
   }, [location.pathname]);
 
   if (!race) {
-    return <p>Loading...</p>; // Gestion de l'état de chargement
+    return <p>Loading...</p>;
   }
 
   return (
@@ -49,7 +66,6 @@ const RaceDetails = () => {
           <div
             style={{
               borderRadius: "50%",
-              // borderColor: "red",
               borderWidth: "3px",
               width: "50px",
               height: "50px",
@@ -65,6 +81,17 @@ const RaceDetails = () => {
             />
           </div>
           <h1 className="p-4">{race.name}</h1>
+          {hasBet && (
+            <p style={{
+              backgroundColor: '#f8d7da',
+              color: '#721c24',
+              padding: '5px 10px',
+              borderRadius: '5px',
+              marginLeft: '10px'
+            }}>
+              You already sent a bet for this race
+            </p>
+          )}
         </div>
       </header>
       <DriverList/>
