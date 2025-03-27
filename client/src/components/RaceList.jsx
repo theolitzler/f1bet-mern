@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Flag from "react-world-flags";
 import { useNavigate } from "react-router-dom";
-import { RightOutlined } from "@ant-design/icons/lib/icons";
+import { RightOutlined, CheckOutlined } from "@ant-design/icons"; // Add this import
 import { API_BASE_URL } from "../services/ApiConfig.jsx";
 
 const options = {
@@ -16,6 +16,7 @@ const options = {
 
 const RaceList = ({ type }) => {
   const [races, setRaces] = useState([]);
+  const [userBets, setUserBets] = useState([]); // Add state for user bets
   const navigate = useNavigate();
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -29,7 +30,6 @@ const RaceList = ({ type }) => {
         return type === "upcoming" ? raceDate > currentTime : raceDate < currentTime;
       });
 
-      // Si le type est "completed", trier les courses par date décroissante
       if (type === "completed") {
         filteredRaces.sort((a, b) => new Date(b.date) - new Date(a.date));
       }
@@ -37,8 +37,16 @@ const RaceList = ({ type }) => {
       setRaces(filteredRaces);
     };
 
+    const fetchUserBets = async () => {
+      const response = await axios.get(`${API_BASE_URL}/bets/user`);
+      setUserBets(response.data);
+    };
+
     fetchRaces();
+    fetchUserBets();
   }, [type]);
+
+  const hasUserBet = (raceId) => userBets.some((bet) => bet.raceId === raceId);
 
   const handleRaceClick = (raceId) => {
     if (type === "upcoming") {
@@ -88,8 +96,10 @@ const RaceList = ({ type }) => {
               {race.location}
             </span>
           )}
-          {type === "upcoming" && <RightOutlined />}
-          {type === "completed" && <div>{/* @TODO add the bet result here */}</div>}
+          <div className="flex items-center">
+            {hasUserBet(race.id) && <CheckOutlined style={{ marginRight: "8px", color: "green" }} />}
+            {type === "upcoming" && <RightOutlined />}
+          </div>
         </div>
       ))}
     </div>
