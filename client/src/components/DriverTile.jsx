@@ -1,47 +1,28 @@
 import React from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
-const DriverTile = ({ driver, index, moveTile }) => {
-  const ref = React.useRef(null);
-
-  const [, drop] = useDrop({
-    accept: 'driverTile',
-    hover(item) {
-      if (!ref.current) {
-        return;
-      }
-      const dragIndex = item.index;
-      const hoverIndex = index;
-
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-
-      moveTile(dragIndex, hoverIndex);
-      item.index = hoverIndex;
-    },
+const DriverTile = ({ driver, index }) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: `driver-${driver.id}`,
   });
 
-  const [{ isDragging }, drag] = useDrag({
-    type: 'driverTile',
-    item: { index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-
-  drag(drop(ref));
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
 
   return (
     <div
-      ref={ref}
-      className={`flex items-center justify-between p-4 bg-gray-100 shadow-md rounded-md my-2 ${
-        isDragging ? 'opacity-50' : 'opacity-100'
-      }`}
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      className="flex items-center justify-between p-4 bg-gray-100 shadow-md rounded-md my-2"
     >
       <span className="font-bold">{index + 1}</span>
       <span>{driver.name}</span>
-      {/* <span>{driver.number}</span> */}
       <span>{driver.team}</span>
     </div>
   );

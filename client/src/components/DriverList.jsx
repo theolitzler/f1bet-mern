@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndContext, closestCenter } from '@dnd-kit/core';
+import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import DriverTile from './DriverTile';
 import jwt from "jsonwebtoken";
 import { API_BASE_URL } from "../services/ApiConfig.jsx";
@@ -25,14 +25,17 @@ const DriverList = () => {
     };
 
     fetchDrivers();
-  }, [API_BASE_URL]);
+  }, []);
 
-  const moveTile = (dragIndex, hoverIndex) => {
-    const dragDriver = driverList[dragIndex];
-    const updatedDrivers = [...driverList];
-    updatedDrivers.splice(dragIndex, 1);
-    updatedDrivers.splice(hoverIndex, 0, dragDriver);
-    setDriverList(updatedDrivers);
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      const oldIndex = driverList.findIndex(driver => `driver-${driver.id}` === active.id);
+      const newIndex = driverList.findIndex(driver => `driver-${driver.id}` === over.id);
+
+      setDriverList((prev) => arrayMove(prev, oldIndex, newIndex));
+    }
   };
 
   const saveList = async () => {
@@ -61,7 +64,7 @@ const DriverList = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Vérifiez le format "Bearer"
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({ raceId, predictions })
       });
@@ -80,19 +83,21 @@ const DriverList = () => {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="p-4">
-        {driverList.map((driver, index) => (
-          <DriverTile key={driver.id} index={index} driver={driver} moveTile={moveTile} />
-        ))}
-        <button
-          onClick={saveList}
-          className="mt-4 p-2 bg-blue-500 text-white rounded-md shadow-md"
-        >
-          Sauvegarder
-        </button>
-      </div>
-    </DndProvider>
+    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext items={driverList.map(driver => `driver-${driver.id}`)} strategy={verticalListSortingStrategy}>
+        <div className="p-4">
+          {driverList.map((driver, index) => (
+            <DriverTile key={driver.id} index={index} driver={driver} />
+          ))}
+          <button
+            onClick={saveList}
+            className="mt-4 p-2 bg-blue-500 text-white rounded-md shadow-md"
+          >
+            Sauvegarder
+          </button>
+        </div>
+      </SortableContext>
+    </DndContext>
   );
 };
 
